@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA World Cup 2026 - Official Bracket</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #120a8f;
+            --secondary: #00c1ff;
+            --dark: #0f0f1e;
+            --gray: #1e1e2e;
+            --success: #00d4aa;
+            --gold: #ffd700;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1600px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 3.5rem;
+            background: linear-gradient(to right, #00c1ff, #ffffff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .subtitle { text-align: center; color: #aaa; margin-bottom: 30px; }
+
+        .stage {
+            margin: 40px 0;
+            padding: 25px;
+            background: var(--gray);
+            border-radius: 16px;
+        }
+        .stage h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        .playoffs-grid, .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .playoff-card, .group-card {
+            background: #2a2a3e;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #444;
+        }
+        .group-card h3 { color: var(--secondary); margin-bottom: 15px; }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 8px;
+            color: white;
+        }
+        .btn {
+            padding: 16px 50px;
+            margin: 30px auto;
+            display: block;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 195, 255, 0.4); }
+        .btn:disabled { background: #444; cursor: not-allowed; transform: none; }
+
+        /* Bracket */
+        .bracket-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+        .bracket-half { flex: 1; min-width: 700px; }
+        .round { margin-bottom: 60px; }
+        .round h3 {
+            text-align: center;
+            color: var(--secondary);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            background: rgba(0,193,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .match {
+            background: #1e1e2e;
+            margin: 15px auto;
+            width: 90%;
+            max-width: 500px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .match.winner-selected {
+            border-color: var(--success);
+            background: rgba(0,212,170,0.15);
+        }
+        .team {
+            padding: 12px;
+            margin: 8px 0;
+            background: #2a2a3e;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .team.winner {
+            background: var(--success);
+            color: white;
+            font-weight: bold;
+        }
+        .winner-select {
+            margin-top: 12px;
+            padding: 8px;
+            font-size: 0.95rem;
+        }
+        .next-btn-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .final-stage {
+            text-align: center;
+            margin: 80px 0;
+        }
+        .final-match {
+            display: inline-block;
+            background: linear-gradient(45deg, #2a1a3e, #1e2a3e);
+            padding: 40px;
+            border-radius: 20px;
+            border: 4px solid var(--gold);
+            min-width: 500px;
+        }
+        .final-match h3 { color: gold; font-size: 2.5rem; margin-bottom: 20px; }
+
+        @media (max-width: 1200px) {
+            .bracket-container { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>FIFA World Cup 2026</h1>
+    <p class="subtitle">Official Left-Right Bracket • Auto Next Round Buttons • Real Playoff Teams</p>
+
+    <!-- Playoff & Groups (same as before) -->
+    <div class="stage">
+        <h2>1. Select Playoff Teams</h2>
+        <div class="playoffs-grid">
+            <div class="playoff-card"><strong>UEFA A → B</strong><br><small>Italy / Wales / Bosnia / N.Ireland</small>
+                <select id="uefa-a"><option>Italy</option><option>Wales</option><option>Bosnia and Herzegovina</option><option>Northern Ireland</option></select>
+            </div>
+            <div class="playoff-card"><strong>UEFA B → F</strong><br><small>Poland / Ukraine / Sweden / Albania</small>
+                <select id="uefa-b"><option>Poland</option><option>Ukraine</option><option>Sweden</option><option>Albania</option></select>
+            </div>
+            <div class="playoff-card"><strong>UEFA C → D</strong><br><small>Türkiye / Romania / Slovakia / Kosovo</small>
+                <select id="uefa-c"><option>Türkiye</option><option>Romania</option><option>Slovakia</option><option>Kosovo</option></select>
+            </div>
+            <div class="playoff-card"><strong>UEFA D → A</strong><br><small>Denmark / Czechia / Ireland / N.Macedonia</small>
+                <select id="uefa-d"><option>Denmark</option><option>Czechia</option><option>Republic of Ireland</option><option>North Macedonia</option></select>
+            </div>
+            <div class="playoff-card"><strong>FIFA 1 → I</strong><br><small>Bolivia / Iraq / Suriname</small>
+                <select id="fifa-1"><option>Bolivia</option><option>Iraq</option><option>Suriname</option></select>
+            </div>
+            <div class="playoff-card"><strong>FIFA 2 → K</strong><br><small>Jamaica / Congo DR / New Caledonia</small>
+                <select id="fifa-2"><option>Jamaica</option><option>Congo DR</option><option>New Caledonia</option></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="stage">
+        <h2>2. Assign Group Positions</h2>
+        <div class="groups-grid" id="groups"></div>
+    </div>
+
+    <div class="stage">
+        <h2>3. Rank Third-Placed Teams (1 = Best)</h2>
+        <div id="thirds-ranking"></div>
+        <button class="btn" onclick="generateBracket()">Generate Full Bracket</button>
+    </div>
+
+    <!-- Full Bracket with Auto Buttons -->
+    <div id="full-bracket" style="display:none;">
+        <div class="bracket-container">
+            <div class="bracket-half">
+                <div class="round"><h3>Round of 32</h3><div id="r32-left"></div></div>
+                <div class="round"><h3>Round of 16</h3><div id="r16-left"></div></div>
+                <div class="round"><h3>Quarter-Finals</h3><div id="qf-left"></div></div>
+                <div class="round"><h3>Semi-Final 1</h3><div id="sf1"></div></div>
+            </div>
+            <div class="bracket-half" style="text-align:right;">
+                <div class="round"><h3>Round of 32</h3><div id="r32-right"></div></div>
+                <div class="round"><h3>Round of 16</h3><div id="r16-right"></div></div>
+                <div class="round"><h3>Quarter-Finals</h3><div id="qf-right"></div></div>
+                <div class="round"><h3>Semi-Final 2</h3><div id="sf2"></div></div>
+            </div>
+        </div>
+
+        <!-- Auto Progress Buttons -->
+        <div class="next-btn-container" id="btn-r16" style="display:none;">
+            <button class="btn" onclick="showR16()">Proceed to Round of 16</button>
+        </div>
+        <div class="next-btn-container" id="btn-qf" style="display:none;">
+            <button class="btn" onclick="showQF()">Proceed to Quarter-Finals</button>
+        </div>
+        <div class="next-btn-container" id="btn-sf" style="display:none;">
+            <button class="btn" onclick="showSF()">Proceed to Semi-Finals</button>
+        </div>
+        <div class="next-btn-container" id="btn-final" style="display:none;">
+            <button class="btn" onclick="showFinal()">Proceed to Final</button>
+        </div>
+
+        <div class="final-stage" id="final-stage" style="display:none;">
+            <div class="final-match" id="third-place-final"></div>
+            <div class="final-match" id="grand-final" style="margin-top: 50px;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const playoffTeams = {
+        'UEFA Playoff A': ['Italy','Wales','Bosnia and Herzegovina','Northern Ireland'],
+        'UEFA Playoff B': ['Poland','Ukraine','Sweden','Albania'],
+        'UEFA Playoff C': ['Türkiye','Romania','Slovakia','Kosovo'],
+        'UEFA Playoff D': ['Denmark','Czechia','Republic of Ireland','North Macedonia'],
+        'FIFA Playoff 1': ['Bolivia','Iraq','Suriname'],
+        'FIFA Playoff 2': ['Jamaica','Congo DR','New Caledonia']
+    };
+
+    const groups = { A:['Mexico','South Africa','Korea Republic','UEFA Playoff D'], B:['Canada','UEFA Playoff A','Qatar','Switzerland'], C:['Brazil','Morocco','Haiti','Scotland'], D:['USA','Paraguay','Australia','UEFA Playoff C'], E:['Germany','Curaçao',"Côte d'Ivoire",'Ecuador'], F:['Netherlands','Japan','UEFA Playoff B','Tunisia'], G:['Belgium','Egypt','IR Iran','New Zealand'], H:['Spain','Cabo Verde','Saudi Arabia','Uruguay'], I:['France','Senegal','FIFA Playoff 1','Norway'], J:['Argentina','Algeria','Austria','Jordan'], K:['Portugal','FIFA Playoff 2','Uzbekistan','Colombia'], L:['England','Croatia','Ghana','Panama'] };
+
+    const thirdPaths = {74:['A','B','C','D','F'],77:['C','D','F','G','H'],79:['C','E','F','H','I'],80:['E','H','I','J','K'],81:['B','E','F','I','J'],82:['A','E','H','I','J'],85:['E','F','G','I','J'],87:['D','E','I','J','L']};
+
+    let groupResults = {}, thirdRank = {}, r32Winners = {}, r16Winners = {}, qfWinners = {}, sfWinners = {};
+
+    function getPlayoffTeam(key) {
+        const id = key.replace(/ /g,'-').toLowerCase();
+        const el = document.getElementById(id);
+        return el ? el.value : playoffTeams[key][0];
+    }
+
+    function buildGroups() {
+        document.getElementById('groups').innerHTML = '';
+        Object.keys(groups).forEach(g => {
+            const div = document.createElement('div');
+            div.className = 'group-card';
+            div.innerHTML = `<h3>Group ${g}</h3>`;
+            const teams = groups[g].map(t => t.includes('Playoff') ? getPlayoffTeam(t) : t);
+            ['1st','2nd','3rd','4th'].forEach(pos => {
+                const sel = document.createElement('select');
+                sel.id = `g-${g}-${pos}`;
+                teams.forEach(t => { const o = document.createElement('option'); o.value = o.text = t; sel.appendChild(o); });
+                sel.value = teams[['1st','2nd','3rd','4th'].indexOf(pos)];
+                sel.onchange = () => { ensureUnique(g); updateThirds(); };
+                div.appendChild(sel);
+            });
+            document.getElementById('groups').appendChild(div);
+        });
+        updateThirds();
+    }
+
+    function ensureUnique(g) {
+        const used = new Set();
+        ['1st','2nd','3rd','4th'].forEach(p => {
+            const s = document.getElementById(`g-${g}-${p}`);
+            if (used.has(s.value)) s.value = '';
+            else used.add(s.value);
+        });
+    }
+
+    function updateThirds() {
+        const c = document.getElementById('thirds-ranking');
+        c.innerHTML = '';
+        Object.keys(groups).forEach(g => {
+            const team = document.getElementById(`g-${g}-3rd`)?.value || '';
+            const d = document.createElement('div');
+            d.innerHTML = `<strong>Group ${g}:</strong> ${team} → Rank: <input type="number" min="1" max="12" style="width:70px" data-group="${g}">`;
+            c.appendChild(d);
+        });
+    }
+
+    function generateBracket() {
+        Object.keys(groups).forEach(g => {
+            groupResults[g] = { '1st': document.getElementById(`g-${g}-1st`).value, '2nd': document.getElementById(`g-${g}-2nd`).value, '3rd': document.getElementById(`g-${g}-3rd`).value };
+            thirdRank[g] = parseInt(document.querySelector(`input[data-group="${g}"]`).value) || 99;
+        });
+
+        const rankedThirds = Object.keys(groups).map(g => ({g, team: groupResults[g]['3rd'], rank: thirdRank[g]})).sort((a,b)=>a.rank-b.rank).slice(0,8);
+        const assigned = {};
+        Object.keys(thirdPaths).forEach(id => {
+            for (let t of rankedThirds) {
+                if (thirdPaths[id].includes(t.g) && !Object.values(assigned).includes(t.team)) { assigned[id] = t.team; break; }
+            }
+        });
+
+        const r32 = [
+            {id:73, a:groupResults.A['2nd'], b:groupResults.B['2nd']},
+            {id:74, a:groupResults.E['1st'], b:assigned[74]},
+            {id:75, a:groupResults.F['1st'], b:groupResults.C['2nd']},
+            {id:76, a:groupResults.C['1st'], b:groupResults.F['2nd']},
+            {id:77, a:groupResults.I['1st'], b:assigned[77]},
+            {id:78, a:groupResults.E['2nd'], b:groupResults.I['2nd']},
+            {id:79, a:groupResults.A['1st'], b:assigned[79]},
+            {id:80, a:groupResults.L['1st'], b:assigned[80]},
+            {id:81, a:groupResults.D['1st'], b:assigned[81]},
+            {id:82, a:groupResults.G['1st'], b:assigned[82]},
+            {id:83, a:groupResults.K['2nd'], b:groupResults.L['2nd']},
+            {id:84, a:groupResults.H['1st'], b:groupResults.J['2nd']},
+            {id:85, a:groupResults.B['1st'], b:assigned[85]},
+            {id:86, a:groupResults.J['1st'], b:groupResults.H['2nd']},
+            {id:87, a:groupResults.K['1st'], b:assigned[87]},
+            {id:88, a:groupResults.D['2nd'], b:groupResults.G['2nd']}
+        ];
+
+        renderMatches('r32-left', r32.slice(0,8), r32Winners, checkR32Complete);
+        renderMatches('r32-right', r32.slice(8,16), r32Winners, checkR32Complete);
+        document.getElementById('full-bracket').style.display = 'block';
+    }
+
+    function renderMatches(containerId, matches, storage, callback) {
+        const cont = document.getElementById(containerId);
+        cont.innerHTML = '';
+        matches.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'match';
+            div.innerHTML = `<small>Match ${m.id}</small>
+                <div class="team">${m.a}</div><strong>vs</strong><div class="team">${m.b}</div>
+                <select class="winner-select" data-match="${m.id}">
+                    <option value="">Winner?</option>
+                    <option>${m.a}</option><option>${m.b}</option>
+                </select>`;
+            div.querySelector('select').onchange = e => {
+                storage[m.id] = e.target.value;
+                div.classList.add('winner-selected');
+                div.querySelectorAll('.team').forEach(t => t.classList.toggle('winner', t.textContent === e.target.value));
+                if (callback) callback();
+            };
+            cont.appendChild(div);
+        });
+    }
+
+    function checkR32Complete() {
+        if (Object.keys(r32Winners).length === 16) {
+            document.getElementById('btn-r16').style.display = 'block';
+        }
+    }
+
+    function showR16() {
+        const r16 = [
+            {id:89, a:r32Winners[73], b:r32Winners[75]},
+            {id:90, a:r32Winners[74], b:r32Winners[77]},
+            {id:91, a:r32Winners[76], b:r32Winners[78]},
+            {id:92, a:r32Winners[79], b:r32Winners[80]},
+            {id:93, a:r32Winners[83], b:r32Winners[84]},
+            {id:94, a:r32Winners[81], b:r32Winners[82]},
+            {id:95, a:r32Winners[86], b:r32Winners[88]},
+            {id:96, a:r32Winners[85], b:r32Winners[87]}
+        ];
+        renderMatches('r16-left', r16.slice(0,4), r16Winners, checkR16Complete);
+        renderMatches('r16-right', r16.slice(4,8), r16Winners, checkR16Complete);
+        document.getElementById('btn-r16').style.display = 'none';
+    }
+
+    function checkR16Complete() {
+        if (Object.keys(r16Winners).length === 8) {
+            document.getElementById('btn-qf').style.display = 'block';
+        }
+    }
+
+    function showQF() {
+        const qf = [
+            {id:97, a:r16Winners[89], b:r16Winners[90]},
+            {id:98, a:r16Winners[91], b:r16Winners[92]},
+            {id:99, a:r16Winners[93], b:r16Winners[94]},
+            {id:100, a:r16Winners[95], b:r16Winners[96]}
+        ];
+        renderMatches('qf-left', qf.slice(0,2), qfWinners, checkQFComplete);
+        renderMatches('qf-right', qf.slice(2,4), qfWinners, checkQFComplete);
+        document.getElementById('btn-qf').style.display = 'none';
+    }
+
+    function checkQFComplete() {
+        if (Object.keys(qfWinners).length === 4) {
+            document.getElementById('btn-sf').style.display = 'block';
+        }
+    }
+
+    function showSF() {
+        const sf = [
+            {id:101, a:qfWinners[97], b:qfWinners[98]},
+            {id:102, a:qfWinners[99], b:qfWinners[100]}
+        ];
+        renderMatches('sf1', [sf[0]], sfWinners, checkSFComplete);
+        renderMatches('sf2', [sf[1]], sfWinners, checkSFComplete);
+        document.getElementById('btn-sf').style.display = 'none';
+    }
+
+    function checkSFComplete() {
+        if (Object.keys(sfWinners).length === 2) {
+            document.getElementById('btn-final').style.display = 'block';
+        }
+    }
+
+    function showFinal() {
+        const loser1 = sfWinners[101] === qfWinners[97] ? qfWinners[98] : qfWinners[97];
+        const loser2 = sfWinners[102] === qfWinners[99] ? qfWinners[100] : qfWinners[99];
+
+        document.getElementById('third-place-final').innerHTML = `
+            <h3>Third Place Play-off</h3>
+            <div class="team">${loser1}</div> vs <div class="team">${loser2}</div>
+            <select class="winner-select"><option>Third Place</option><option>${loser1}</option><option>${loser2}</option></select>
+        `;
+
+        document.getElementById('grand-final').innerHTML = `
+            <h3 style="color:gold; font-size:2.5rem;">GRAND FINAL</h3>
+            <div class="team">${sfWinners[101]}</div> vs <div class="team">${sfWinners[102]}</div>
+            <select class="winner-select" style="margin-top:20px; font-size:1.3rem; padding:15px;">
+                <option>2026 Champion</option>
+                <option>${sfWinners[101]}</option>
+                <option>${sfWinners[102]}</option>
+            </select>
+        `;
+
+        document.getElementById('final-stage').style.display = 'block';
+        document.getElementById('btn-final').style.display = 'none';
+    }
+
+    // Initialize
+    buildGroups();
+    document.querySelectorAll('select[id^="uefa-"], select[id^="fifa-"]').forEach(s => s.addEventListener('change', buildGroups));
+</script>
+</body>
+</html>
